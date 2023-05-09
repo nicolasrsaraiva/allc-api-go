@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/nicolasrsaraiva/allc-api/src/model"
@@ -9,30 +10,27 @@ import (
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 
-	name := r.FormValue("username")
-	email := r.FormValue("email")
-	phone := r.FormValue("phone")
-	password := r.FormValue("password")
-	city := r.FormValue("city")
-	street := r.FormValue("street")
+	decoder := json.NewDecoder(r.Body)
+	var user model.User
+	err := decoder.Decode(&user)
 
-	user := model.User{
-		Name:     name,
-		Email:    email,
-		Phone:    phone,
-		Password: password,
-		City:     city,
-		Street:   street,
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
-	err := user.CreateUser()
+	err = user.CreateUser()
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(user)
 }

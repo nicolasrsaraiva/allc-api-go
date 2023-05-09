@@ -6,13 +6,16 @@ import (
 )
 
 type User struct {
-	Id       string
-	Name     string
-	Email    string
-	Phone    string
-	Password string
-	City     string
-	Street   string
+	Id       string `json:"id"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Phone    string `json:"phone"`
+	Password string `json:"password"`
+	State    string `json:"state"`
+	City     string `json:"city"`
+	Street   string `json:"street"`
+	District string `json:"district"`
+	Number   string `json:"number"`
 }
 
 func (user *User) CreateUser() error {
@@ -24,13 +27,13 @@ func (user *User) CreateUser() error {
 		panic(err.Error())
 	}
 
-	stmt, err := db.Prepare("INSERT INTO users(Name, Email, Phone, Password, City, Street) VALUES ($1, $2, $3, $4, $5, $6)")
+	stmt, err := db.Prepare("INSERT INTO users(Name, Email, Phone, Password, State, City, Street, District, Number) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)")
 	if err != nil {
 		panic(err.Error())
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(user.Name, user.Email, user.Phone, hashedPassword, user.City, user.Street)
+	_, err = stmt.Exec(user.Name, user.Email, user.Phone, hashedPassword, user.State, user.City, user.Street, user.District, user.Number)
 	if err != nil {
 		panic(err.Error())
 	}
