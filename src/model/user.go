@@ -7,15 +7,15 @@ import (
 
 type User struct {
 	Id       string `json:"id"`
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Phone    string `json:"phone"`
-	Password string `json:"password"`
-	State    string `json:"state"`
-	City     string `json:"city"`
-	Street   string `json:"street"`
-	District string `json:"district"`
-	Number   string `json:"number"`
+	Name     string `json:"name" validate:"required"`
+	Email    string `json:"email" validate:"required,email"`
+	Phone    string `json:"phone" validate:"required"`
+	Password string `json:"password" validate:"required,min=8"`
+	State    string `json:"state" validate:"required"`
+	City     string `json:"city" validate:"required"`
+	Street   string `json:"street" validate:"required"`
+	District string `json:"district" validate:"required"`
+	Number   string `json:"number" validate:"required"`
 }
 
 func (user *User) CreateUser() error {

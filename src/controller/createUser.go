@@ -4,10 +4,12 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/nicolasrsaraiva/allc-api/src/model"
 )
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
+
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -22,6 +24,13 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
+	}
+
+	validate := validator.New()
+	err = validate.Struct(user)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusUnprocessableEntity)
 	}
 
 	err = user.CreateUser()
