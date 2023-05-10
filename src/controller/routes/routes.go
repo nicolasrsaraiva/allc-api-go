@@ -7,5 +7,5 @@ import (
 )
 
 func InitRoutes() {
-	http.HandleFunc("/user/create", controllers.CreateUser)
+	http.HandleFunc("/user/create", controllers.CreateUserController)
 }
