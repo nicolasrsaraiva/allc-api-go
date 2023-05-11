@@ -51,21 +51,31 @@ func DeleteUserController(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetUserController(w http.ResponseWriter, r *http.Request) model.User {
+func GetUserController(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
 
-	return model.User{}
+	w.Header().Set("Content-Type", "application/json")
 }
 
-func GetUsersController(w http.ResponseWriter, r *http.Request) []model.User {
-
+func GetUsersController(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
 
-	return []model.User{}
+	users := model.GetUsers()
+
+	for _, user := range users {
+		encoder := json.NewEncoder(w)
+		err := encoder.Encode(user)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
 
 func UpdateUserController(w http.ResponseWriter, r *http.Request) {

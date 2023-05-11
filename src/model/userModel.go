@@ -40,16 +40,36 @@ func (user *User) CreateUser() error {
 	return nil
 }
 
-func (user *User) GetUsers() error {
+func GetUsers() []User {
+	users := []User{}
 
 	dbConn := db.ConnectDB()
 	defer dbConn.Close()
 
-	stmt, err := dbConn.Query("SELECT(Name, Email, Phone, State, City, Street, District, Number) FROM users ORDER BY ID")
+	stmt, err := dbConn.Query("SELECT Id, Name, Email, Phone, Password, State, City, Street, District, Number FROM users ORDER BY ID")
+
 	if err != nil {
 		panic(err.Error())
 	}
+
+	var (
+		id, name, email, phone, password, state, city, street, district, number string
+	)
+
+	for stmt.Next() {
+
+		err := stmt.Scan(&id, &name, &email, &phone, &password, &state, &city, &street, &district, &number)
+		if err != nil {
+			panic(err.Error())
+		}
+		users = append(users, User{id, name, email, phone, password, state, city, street, district, number})
+	}
+
 	defer stmt.Close()
 
+	return users
+}
+
+func (user *User) GetUser() error {
 	return nil
 }

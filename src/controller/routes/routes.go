@@ -3,9 +3,10 @@ package routes
 import (
 	"net/http"
 
-	controllers "github.com/nicolasrsaraiva/allc-api/src/controller"
+	"github.com/nicolasrsaraiva/allc-api/src/controller"
 )
 
 func InitRoutes() {
-	http.HandleFunc("/user/create", controllers.CreateUserController)
+	http.HandleFunc("/user", controller.CreateUserController)
+	http.HandleFunc("/users", controller.GetUsersController)
 }
