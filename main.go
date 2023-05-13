@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+
 	routes.InitRoutes()
 	http.ListenAndServe(":8080", nil)
 }

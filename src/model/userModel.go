@@ -70,6 +70,25 @@ func GetUsers() []User {
 	return users
 }
 
+func GetUserByEmail(userEmail string) User {
+	dbConn := db.ConnectDB()
+	defer dbConn.Close()
+
+	var user User
+
+	stmt, err := dbConn.Prepare("SELECT * FROM users WHERE email=$1")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmt.Close()
+
+	err = stmt.QueryRow(userEmail).Scan(&user.Id, &user.Name, &user.Email, &user.Phone, &user.Password, &user.State, &user.City, &user.Street, &user.District, &user.Number)
+	if err != nil {
+		panic(err.Error())
+	}
+	return user
+}
+
 func (user *User) GetUser() error {
 	return nil
 }
